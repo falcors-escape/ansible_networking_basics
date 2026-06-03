@@ -1,0 +1,7 @@
+- name: Test connectivity to Cisco Routers
+  hosts: router1
+  gather_facts: no
+
+  tasks: 
+    - name: check SSH using ping method
+      ansible.builtin.ping:
