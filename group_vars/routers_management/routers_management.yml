@@ -1,23 +1,20 @@
-#network_cli plugin for network devices
+# network_cli plugin for network devices
 ansible_connection: ansible.netcommon.network_cli
-
-#define the network os with the Cisco IOS collection
 ansible_network_os: cisco.ios.ios
 
-#ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -c aes128-cbc admin@192.168.1.200
-#This is the actual ssh command for RHEL 10 to my cisco router...
+# Use libssh to inherit the OS-level LEGACY crypto policy
+ansible_network_cli_ssh_type: libssh
 
-ansible_ssh_common_args: >-
-  -o KexAlgorithms=+diffie-hellman-group1-sha1
-  -o HostKeyAlgorithms=+ssh-rsa
-  -o PubkeyAcceptedAlgorithms=+ssh-rsa
-  -c aes128-cbc
+# Explicitly assign legacy algorithms via the native libssh connection parameters
+ansible_libssh_key_exchange_algorithms: "diffie-hellman-group1-sha1,diffie-hellman-group14-sha1"
+ansible_libssh_hostkeys: "ssh-rsa"
+ansible_libssh_publickey_algorithms: "ssh-rsa"
 
-#Read credentials safely from the encrypted vault.yml file
+# Read credentials safely from the encrypted vault.yml file
 ansible_user: "{{ vault_ansible_user }}"
 ansible_password: "{{ vault_ansible_password }}"
 
-#enable mode password 
+# enable mode password 
 ansible_become: yes
 ansible_become_method: enable
 ansible_become_password: "{{ vault_ansible_become_password }}"
