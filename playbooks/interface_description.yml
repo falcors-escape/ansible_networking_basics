@@ -1,0 +1,15 @@
+- name: Label interfaces
+  hosts: router1
+  gather_facts: no
+  vars: 
+    ansible_network_cli_ssh_type: libssh
+
+  tasks: 
+    - name: set description for fastethernet0/0
+      cisco.ios.ios_interfaces:
+        config:
+          - name: FastEthernet0/0
+            description: "management interface"
+            enabled: true
+        state: merged
+      
